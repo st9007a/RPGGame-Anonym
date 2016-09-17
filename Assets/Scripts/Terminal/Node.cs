@@ -22,7 +22,7 @@ public class Node  {
         Depth = 0;
         Id = 0;
         Name = "null";       
-        Comment = "";
+        Comment = "沒有說明";
 
         Parent = null;
         Children = new List<Node>();

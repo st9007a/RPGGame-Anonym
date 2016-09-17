@@ -117,8 +117,11 @@ public class Terminal {
     private void move(string sub = "", string obj = "") {
         switch (sub) {
             case "up":
-                Pointer = Tree.IndexOf(Tree[Pointer].Parent);
-                Result = "現在位置 : " + Tree[Pointer].Name;
+                if (Pointer != 0) {
+                    Pointer = Tree.IndexOf(Tree[Pointer].Parent);
+                    Result = "現在位置 : " + Tree[Pointer].Name;
+                }
+                else Result = "已在最上層";
                 break;
             case "down":
                 bool isExist = false;
