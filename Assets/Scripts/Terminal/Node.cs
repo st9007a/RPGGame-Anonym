@@ -3,21 +3,52 @@ using System.Collections.Generic;
 
 public class Node  {
 
-    public int Depth;
+    public int Depth { private set; get; }
+    public int Id { set; get; }
 
-    public int Id;
-    public string Name;
+    public bool IsPwd { private set; get; }
 
-    public bool IsPwd;
-    public string Pwd;
+    public string Name { private set; get; }
+    public string Pwd { private set; get; }
+    public string Comment { private set; get; }
 
-    public Node Parent;
-    public List<Node> Children;
+    public Node Parent { private set; get; }
 
-    public List<string> Contains;
+    public List<Node> Children { set; get; }
+    public List<string> DocName { private set; get; }
+    public List<string> DocContent { private set; get; }
 
-    public string show() {
-        return "";
+    public Node() {
+        Depth = 0;
+        Id = 0;
+        Name = "null";       
+        Comment = "";
+
+        Parent = null;
+        Children = new List<Node>();
+        DocContent = new List<string>();
+        DocName = new List<string>();
+    }
+    public Node(string name, bool isPwd = false, string pwd = "") : this() {
+        Name = name;
+        IsPwd = isPwd;
+        Pwd = pwd;
+    }
+
+    public void AddChild(Node n) {
+        n.Depth = Depth + 1;
+        n.Parent = this;
+
+        Children.Add(n);
+    }
+
+    public void AddDoc(string name, string content) {
+        DocName.Add(name);
+        DocContent.Add(content);
+    }
+
+    public void AddComment(string comment) {
+        Comment = comment;
     }
       
 	

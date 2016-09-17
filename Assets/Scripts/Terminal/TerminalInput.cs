@@ -9,7 +9,20 @@ public class TerminalInput : MonoBehaviour {
 
     private int lineCount = 0;
     private InputField inputField;
-    private Terminal t = new Terminal();
+    private Terminal t;
+
+    void Awake() {
+        Node n = new Node("root");
+        n.AddChild(new Node("home"));
+        n.AddChild(new Node("config"));
+        n.Children[0].AddChild(new Node("usr1"));
+
+        t = new Terminal(n, "home");
+
+        t.GetNode("home").AddComment("管理使用者");
+        t.GetNode("config").AddComment("管理主機設定");
+
+    }
 
 	void Start(){
 
@@ -61,13 +74,13 @@ public class TerminalInput : MonoBehaviour {
 
             switch (argSet.Count) {
                 case 1:
-                    result = t.Instruct(arg[0]);
+                    result = t.Instruct(argSet[0]);
                     break;
                 case 2:
-                    result = t.Instruct(arg[0], arg[1]);
+                    result = t.Instruct(argSet[0], argSet[1]);
                     break;
                 case 3:
-                    result = t.Instruct(arg[0], arg[1], arg[2]);
+                    result = t.Instruct(argSet[0], argSet[1], argSet[2]);
                     break;
                 default:
                     result = "";
