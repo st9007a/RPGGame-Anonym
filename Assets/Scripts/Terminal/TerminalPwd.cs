@@ -8,7 +8,7 @@ public class TerminalPwd : MonoBehaviour {
     public string ResultText { set; get; }
     public string IncorrectText { set; get; }
 
-    public GameObject Machine;
+    public TerminalMachine Machine;
 
     private InputField inputPwd;
     
@@ -20,8 +20,8 @@ public class TerminalPwd : MonoBehaviour {
 	}
 
     void editEnd() {
-        Machine.GetComponent<TerminalMachine>().PrintResultText("Password : " + inputPwd.text);
-        Machine.GetComponent<TerminalMachine>().PrintResultText(inputPwd.text == Pwd ? ResultText : IncorrectText);
+        Machine.PrintResultText("Password : " + inputPwd.text);
+        Machine.PrintResultText(inputPwd.text == Pwd ? ResultText : IncorrectText);
         if (inputPwd.text == Pwd) {
             //action of node
         }

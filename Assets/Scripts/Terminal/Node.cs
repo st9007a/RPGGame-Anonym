@@ -24,7 +24,7 @@ public class Node  {
         Id = 0;
         Name = "null";       
         Comment = "沒有說明";
-        IsCapture = false;
+        IsCapture = true;
         Parent = null;
         Children = new List<Node>();
         DocContent = new List<string>();
@@ -33,6 +33,7 @@ public class Node  {
     public Node(string name, bool isPwd = false, string pwd = "") : this() {
         Name = name;
         IsPwd = isPwd;
+        IsCapture = !isPwd;
         Pwd = pwd;
     }
 

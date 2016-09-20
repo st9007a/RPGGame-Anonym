@@ -104,8 +104,13 @@ public class Terminal {
     private void root(string sub = "", string obj = "") {
         switch (sub) {
             case "":
-                Pointer = 0;
-                Result = new Response("取得最高權限");
+                if (Tree[0].IsPwd) {
+                    Result = new Response(Tree[0].Pwd, Response.type.PWD);
+                }
+                else {
+                    Pointer = 0;
+                    Result = new Response("取得最高權限");
+                }
                 break;
             default:
                 Result = new Response(errorSubInstruction);

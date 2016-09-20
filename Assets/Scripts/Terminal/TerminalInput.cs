@@ -5,10 +5,9 @@ using System.Collections.Generic;
 
 public class TerminalInput : MonoBehaviour {
 
-    public GameObject Machine;
+    public TerminalMachine Machine;
 
     private InputField inputField;
-    private Terminal t;
 
     private int keyRecordPointer = 0;
     private List<string> keyRecord = new List<string>();
@@ -21,7 +20,6 @@ public class TerminalInput : MonoBehaviour {
         inputField.Select();
         inputField.ActivateInputField();
 
-        t = Machine.GetComponent<TerminalMachine>().t;
     }
 
     void Update() {
@@ -40,7 +38,7 @@ public class TerminalInput : MonoBehaviour {
             string text = inputField.text;
             RectTransform gTransform = GetComponent<RectTransform>();
 
-            Machine.GetComponent<TerminalMachine>().PrintResultText("uno : " + text);
+            Machine.PrintResultText("uno : " + text);
 
             //analyze input
             analyzeInput(text);
@@ -71,14 +69,14 @@ public class TerminalInput : MonoBehaviour {
         for (int i = 0; i < arg.Length; i++)        
             if (arg[i] != " " && arg[i] != "") argSet.Add(arg[i]);
 
-        if (argSet.Count == 1) result = t.Instruct(argSet[0]);
-        else if (argSet.Count == 2) result = t.Instruct(argSet[0], argSet[1]);
-        else if (argSet.Count == 3) result = t.Instruct(argSet[0], argSet[1], argSet[2]);
+        if (argSet.Count == 1) result = Machine.t.Instruct(argSet[0]);
+        else if (argSet.Count == 2) result = Machine.t.Instruct(argSet[0], argSet[1]);
+        else if (argSet.Count == 3) result = Machine.t.Instruct(argSet[0], argSet[1], argSet[2]);
         else result = new Response("錯誤的輸入格式");
 
         //generate result text
         if(result.Type == Response.type.TEXT)
-            Machine.GetComponent<TerminalMachine>().PrintResultText(result.Text);
+            Machine.PrintResultText(result.Text);
     }
 
     void recordInput(string input) {
