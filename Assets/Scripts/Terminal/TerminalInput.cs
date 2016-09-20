@@ -77,6 +77,7 @@ public class TerminalInput : MonoBehaviour {
         //generate result text
         if(result.Type == Response.type.TEXT)
             Machine.PrintResultText(result.Text);
+
     }
 
     void recordInput(string input) {
