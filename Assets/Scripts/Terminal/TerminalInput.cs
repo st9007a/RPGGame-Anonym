@@ -5,10 +5,8 @@ using System.Collections.Generic;
 
 public class TerminalInput : MonoBehaviour {
 
-    public GameObject TerminalText;
+    public GameObject Machine;
 
-    private float containerHeight;
-    private int lineCount = 0;
     private InputField inputField;
     private Terminal t;
 
@@ -29,8 +27,6 @@ public class TerminalInput : MonoBehaviour {
     }
 
 	void Start(){
-
-        containerHeight = transform.parent.GetComponent<RectTransform>().rect.height;
         inputField = GetComponent<InputField>();
 
         inputField.onEndEdit.AddListener(delegate { endEdit(); });
@@ -49,30 +45,26 @@ public class TerminalInput : MonoBehaviour {
 
     void endEdit() {
         if(inputField.text != "") { 
+
+            //generate text 
             string text = inputField.text;
-            GameObject content = Instantiate(TerminalText);
-            RectTransform textTransform = content.GetComponent<RectTransform>();
             RectTransform gTransform = GetComponent<RectTransform>();
 
-            lineCount++;
+            Machine.GetComponent<TerminalMachine>().PrintResultText("uno : " + text);
 
-            content.transform.SetParent(transform.parent);
-            content.transform.localPosition = transform.localPosition;
-            textTransform.offsetMax = new Vector2(5, textTransform.offsetMax.y);
-            textTransform.offsetMin = new Vector2(5, textTransform.offsetMin.y);
-
-            content.GetComponent<Text>().text = "uno : " + text;
+            //analyze input
             analyzeInput(text);
+
+            //record input
             recordInput(text);
 
-            transform.localPosition = new Vector3(0, -18 - lineCount * textTransform.rect.height, 0);
+            //move input field
+            transform.localPosition = new Vector3(0, 18 - transform.parent.GetComponent<RectTransform>().rect.height, 0);
             gTransform.offsetMax = new Vector2(0, gTransform.offsetMax.y);
             gTransform.offsetMin = new Vector2(0, gTransform.offsetMin.y);
 
             inputField.text = "";
 
-            if ((lineCount + 1) * textTransform.rect.height > containerHeight)
-                transform.parent.GetComponent<RectTransform>().offsetMax = new Vector2(0, (lineCount + 1) * textTransform.rect.height - containerHeight);   
         }
 
         inputField.Select();
@@ -93,18 +85,8 @@ public class TerminalInput : MonoBehaviour {
         else if (argSet.Count == 3) result = t.Instruct(argSet[0], argSet[1], argSet[2]);
         else result = "錯誤的輸入格式";
 
-        //產生結果字串
-        GameObject content = Instantiate(TerminalText);
-        RectTransform textTransform = content.GetComponent<RectTransform>();
-
-        content.transform.SetParent(transform.parent);
-        content.transform.localPosition = new Vector3(0, -18 - lineCount * textTransform.rect.height, 0);
-        textTransform.offsetMax = new Vector2(5, textTransform.offsetMax.y);
-        textTransform.offsetMin = new Vector2(5, textTransform.offsetMin.y);
-
-        content.GetComponent<Text>().text = result;
-
-        lineCount++;
+        //generate result text
+        Machine.GetComponent<TerminalMachine>().PrintResultText(result);
     }
 
     void recordInput(string input) {
@@ -115,6 +97,7 @@ public class TerminalInput : MonoBehaviour {
         }
         else {
             keyRecord.RemoveAt(0);
+            keyRecord.Add(input);
             keyRecordPointer = 50;
         }
     }

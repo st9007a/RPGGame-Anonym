@@ -7,6 +7,7 @@ public class Node  {
     public int Id { set; get; }
 
     public bool IsPwd { private set; get; }
+    public bool IsCapture { set; get; }
 
     public string Name { private set; get; }
     public string Pwd { private set; get; }
@@ -23,7 +24,7 @@ public class Node  {
         Id = 0;
         Name = "null";       
         Comment = "沒有說明";
-
+        IsCapture = false;
         Parent = null;
         Children = new List<Node>();
         DocContent = new List<string>();
