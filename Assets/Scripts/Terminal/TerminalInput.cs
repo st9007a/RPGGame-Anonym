@@ -13,18 +13,6 @@ public class TerminalInput : MonoBehaviour {
     private int keyRecordPointer = 0;
     private List<string> keyRecord = new List<string>();
 
-    void Awake() {
-        Node n = new Node("root");
-        n.AddChild(new Node("home"));
-        n.AddChild(new Node("config"));
-        n.Children[0].AddChild(new Node("usr1"));
-
-        t = new Terminal(n, "home");
-
-        t.GetNode("home").AddComment("管理使用者");
-        t.GetNode("config").AddComment("管理主機設定");
-
-    }
 
 	void Start(){
         inputField = GetComponent<InputField>();
@@ -32,6 +20,8 @@ public class TerminalInput : MonoBehaviour {
         inputField.onEndEdit.AddListener(delegate { endEdit(); });
         inputField.Select();
         inputField.ActivateInputField();
+
+        t = Machine.GetComponent<TerminalMachine>().t;
     }
 
     void Update() {
@@ -75,7 +65,8 @@ public class TerminalInput : MonoBehaviour {
     void analyzeInput(string input) {
         string[] arg = input.Split(' ');
         List<string> argSet = new List<string>();
-        string result = "";
+        //string result = "";
+        Response result;
 
         for (int i = 0; i < arg.Length; i++)        
             if (arg[i] != " " && arg[i] != "") argSet.Add(arg[i]);
@@ -83,10 +74,11 @@ public class TerminalInput : MonoBehaviour {
         if (argSet.Count == 1) result = t.Instruct(argSet[0]);
         else if (argSet.Count == 2) result = t.Instruct(argSet[0], argSet[1]);
         else if (argSet.Count == 3) result = t.Instruct(argSet[0], argSet[1], argSet[2]);
-        else result = "錯誤的輸入格式";
+        else result = new Response("錯誤的輸入格式");
 
         //generate result text
-        Machine.GetComponent<TerminalMachine>().PrintResultText(result);
+        if(result.Type == Response.type.TEXT)
+            Machine.GetComponent<TerminalMachine>().PrintResultText(result.Text);
     }
 
     void recordInput(string input) {

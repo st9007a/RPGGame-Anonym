@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 
+
 public class Terminal {
 
     public int Pointer { private set; get; }
     public List<Node> Tree { private set; get; }
     public Dictionary<string, Action<string, string>> InstructionSet { private set; get; }
-    public string Result { private set; get; }
+    public Response Result { private set; get; }
 
     private const string errorInstruction = "無此命令";
     private const string errorSubInstruction = "無此子命令";
@@ -18,7 +19,6 @@ public class Terminal {
         Pointer = -1;
         Tree = new List<Node>();
         InstructionSet = new Dictionary<string, Action<string, string>>();
-        Result = "";
 
         initial();
     }
@@ -76,10 +76,10 @@ public class Terminal {
             Debug.Log(i + " " + Tree[i].Name + " " + (i == 0 ? "null" : Tree[i].Parent.Name));
     }
 
-    public string Instruct(string instr, string subInstr = "" , string obj = "") {
+    public Response Instruct(string instr, string subInstr = "" , string obj = "") {
 
         if (!InstructionSet.ContainsKey(instr))
-            Result = errorInstruction;
+            Result = new Response(errorInstruction);
         else
         {
             Action<string, string> execute = InstructionSet[instr];
@@ -92,10 +92,10 @@ public class Terminal {
     private void comment(string sub = "", string obj = "") {
         switch (sub) {
             case "":
-                Result = Tree[Pointer].Comment;
+                Result = new Response(Tree[Pointer].Comment);
                 break;
             default:
-                Result = errorSubInstruction;
+                Result = new Response(errorSubInstruction);
                 break;
         }
         
@@ -105,10 +105,10 @@ public class Terminal {
         switch (sub) {
             case "":
                 Pointer = 0;
-                Result = "取得最高權限";
+                Result = new Response("取得最高權限");
                 break;
             default:
-                Result = errorSubInstruction;
+                Result = new Response(errorSubInstruction);
                 break;
         }
         
@@ -119,9 +119,9 @@ public class Terminal {
             case "up":
                 if (Pointer != 0) {
                     Pointer = Tree.IndexOf(Tree[Pointer].Parent);
-                    Result = "現在位置 : " + Tree[Pointer].Name;
+                    Result = new Response("現在位置 : " + Tree[Pointer].Name);
                 }
-                else Result = "已在最上層";
+                else Result = new Response("已在最上層");
                 break;
             case "down":
                 bool isExist = false;
@@ -133,11 +133,11 @@ public class Terminal {
                         break;
                     }
                 }
-                if (!isExist) Result = errorObject;
-                else Result = "現在位置 : " + Tree[Pointer].Name;
+                if (!isExist) Result = new Response(errorObject);
+                else Result = new Response("現在位置 : " + Tree[Pointer].Name);
                 break;
             default:
-                Result = errorSubInstruction;
+                Result = new Response(errorSubInstruction);
                 break;
         }
     }

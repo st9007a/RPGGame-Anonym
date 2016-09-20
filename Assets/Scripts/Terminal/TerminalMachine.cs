@@ -6,6 +6,20 @@ public class TerminalMachine : MonoBehaviour {
 
     public GameObject ScrollViewContainer;
     public GameObject ResultText;
+    public Terminal t;
+
+    void Awake() {
+        Node n = new Node("root");
+        n.AddChild(new Node("home"));
+        n.AddChild(new Node("config"));
+        n.Children[0].AddChild(new Node("usr1"));
+
+        t = new Terminal(n, "home");
+
+        t.GetNode("home").AddComment("管理使用者");
+        t.GetNode("config").AddComment("管理主機設定");
+
+    }
 
     public void FixContainerSize(float componentHeight) {
         ScrollViewContainer.GetComponent<RectTransform>().offsetMax += new Vector2(0,componentHeight);        
