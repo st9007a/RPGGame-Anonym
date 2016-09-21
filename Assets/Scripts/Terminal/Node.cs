@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
-public class Node  {
+public class Node {
 
     public int Depth { private set; get; }
     public int Id { set; get; }
@@ -35,6 +37,18 @@ public class Node  {
         IsPwd = isPwd;
         IsCapture = !isPwd;
         Pwd = pwd;
+    }
+
+    public IEnumerable Each() {
+
+        yield return this;
+
+        foreach (Node n in Children) {
+            if (n.Children.Count == 0) yield return n;
+            else foreach (Node nc in n.Each()) yield return nc; 
+        }
+
+        yield break;
     }
 
     public void AddChild(Node n) {

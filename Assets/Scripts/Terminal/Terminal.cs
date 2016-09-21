@@ -9,6 +9,8 @@ public class Terminal {
     public List<Node> Tree { private set; get; }
     public Dictionary<string, Action<string, string>> InstructionSet { private set; get; }
     public Response Result { private set; get; }
+    public int EnterNode { private set; get; }
+    public Node Now { get { return Tree[Pointer]; } }
 
     private const string errorInstruction = "無此命令";
     private const string errorSubInstruction = "無此子命令";
@@ -19,6 +21,7 @@ public class Terminal {
         Pointer = -1;
         Tree = new List<Node>();
         InstructionSet = new Dictionary<string, Action<string, string>>();
+        EnterNode = -1;
 
         initial();
     }
@@ -43,9 +46,7 @@ public class Terminal {
                 Tree.Add(item);
                 item.Id = Tree.IndexOf(item);
             }
-            else {
-                SetTree(item);
-            }
+            else SetTree(item); 
         }
 
     }
@@ -71,6 +72,7 @@ public class Terminal {
         
     }
 
+
     public void PrintTree() {
         for (int i = 0; i < Tree.Count; i++)
             Debug.Log(i + " " + Tree[i].Name + " " + (i == 0 ? "null" : Tree[i].Parent.Name));
@@ -89,6 +91,18 @@ public class Terminal {
         return Result;
     }
 
+    public void Enter() {
+        if (EnterNode != -1) {
+            
+            Pointer = EnterNode;
+            EnterNode = -1;
+
+            //capture all children node
+            foreach (Node child in Tree[Pointer].Each())
+                child.IsCapture = true;
+        }
+    }
+
     private void comment(string sub = "", string obj = "") {
         switch (sub) {
             case "":
@@ -105,6 +119,7 @@ public class Terminal {
         switch (sub) {
             case "":
                 if (Tree[0].IsPwd) {
+                    EnterNode = 0;
                     Result = new Response(Tree[0].Pwd, Response.type.PWD);
                 }
                 else {
@@ -123,8 +138,14 @@ public class Terminal {
         switch (sub) {
             case "up":
                 if (Pointer != 0) {
-                    Pointer = Tree.IndexOf(Tree[Pointer].Parent);
-                    Result = new Response("現在位置 : " + Tree[Pointer].Name);
+                    if (Tree[Pointer].Parent.IsCapture) {
+                        Pointer = Tree.IndexOf(Tree[Pointer].Parent);
+                        Result = new Response("現在位置 : " + Tree[Pointer].Name);
+                    }
+                    else {
+                        EnterNode = Tree.IndexOf(Tree[Pointer].Parent);
+                        Result = new Response(Tree[Pointer].Parent.Pwd, Response.type.PWD);
+                    }
                 }
                 else Result = new Response("已在最上層");
                 break;
