@@ -39,6 +39,10 @@ public class Node {
         Pwd = pwd;
     }
 
+    /// <summary>
+    /// return all children node (include self)
+    /// </summary>
+    /// <returns></returns>
     public IEnumerable Each() {
 
         yield return this;
@@ -46,6 +50,19 @@ public class Node {
         foreach (Node n in Children) {
             if (n.Children.Count == 0) yield return n;
             else foreach (Node nc in n.Each()) yield return nc; 
+        }
+
+        yield break;
+    }
+
+    /// <summary>
+    /// return all children node (exclude self)
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable EachChild() {
+        foreach (Node n in Children) {
+            if (n.Children.Count == 0) yield return n;
+            else foreach (Node nc in n.Each()) yield return nc;
         }
 
         yield break;

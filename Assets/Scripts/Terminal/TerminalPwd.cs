@@ -8,7 +8,6 @@ public class TerminalPwd : MonoBehaviour {
     public int EnterNodeId { set; get; } 
 
     public TerminalMachine Machine;
-    public GameObject Input;
 
     private const string CorrectPwdText = "密碼正確 , ";
     private const string IncorrectPwdText = "輸入密碼錯誤";
@@ -31,18 +30,10 @@ public class TerminalPwd : MonoBehaviour {
 
         Machine.PrintResultText("Password : " + pwdStr);
         Machine.PrintResultText(inputPwd.text == Pwd ? EnterNodeId == 0 ? "取得最高權限" : CorrectPwdText + "進入" + Machine.t.Now.Name : IncorrectPwdText);
-        RectTransform rect = Input.GetComponent<RectTransform>();
-        Input.SetActive(true);
+        
         //move input field
-        Input.transform.localPosition = new Vector3(0, 18 - Input.transform.parent.GetComponent<RectTransform>().rect.height, 0);
-        rect.offsetMax = new Vector2(0, rect.offsetMax.y);
-        rect.offsetMin = new Vector2(0, rect.offsetMin.y);
-        //select input field
-        Input.GetComponent<InputField>().Select();
-        Input.GetComponent<InputField>().ActivateInputField();
-
-        
-        
+        Machine.FixInputFieldPosition();
+     
         GetComponent<InputField>().text = "";
         gameObject.SetActive(false);
     }

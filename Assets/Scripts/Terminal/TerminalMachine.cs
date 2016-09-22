@@ -8,15 +8,17 @@ public class TerminalMachine : MonoBehaviour {
     public GameObject ScrollViewContainer;
     public GameObject ResultText;
     public GameObject PwdInputField;
+    public GameObject TerminalInputField;
+
     public Terminal t;
 
     void Awake() {
         Node n = new Node("root", true, "asd");
         n.AddChild(new Node("home", true, "123"));
         n.AddChild(new Node("config"));
-        n.Children[0].AddChild(new Node("usr1"));
+        n.Children[0].AddChild(new Node("usr1", true, "456"));
 
-        t = new Terminal(n, "usr1");
+        t = new Terminal(n, "home");
 
         t.GetNode("home").AddComment("管理使用者");
         t.GetNode("config").AddComment("管理主機設定");
@@ -25,6 +27,21 @@ public class TerminalMachine : MonoBehaviour {
 
     public void FixContainerSize(float componentHeight) {
         ScrollViewContainer.GetComponent<RectTransform>().offsetMax += new Vector2(0,componentHeight);        
+    }
+
+    public void FixInputFieldPosition() {
+
+        TerminalInputField.SetActive(true);
+
+        RectTransform gTransform = TerminalInputField.GetComponent<RectTransform>();
+
+        TerminalInputField.transform.localPosition = new Vector3(0, 18 - TerminalInputField.transform.parent.GetComponent<RectTransform>().rect.height, 0);
+        gTransform.offsetMax = new Vector2(0, gTransform.offsetMax.y);
+        gTransform.offsetMin = new Vector2(0, gTransform.offsetMin.y);
+        TerminalInputField.GetComponent<InputField>().text = "";
+
+        TerminalInputField.GetComponent<InputField>().Select();
+        TerminalInputField.GetComponent<InputField>().ActivateInputField();
     }
 
     public void PrintResultText(string text) {

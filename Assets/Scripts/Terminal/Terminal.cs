@@ -96,10 +96,11 @@ public class Terminal {
             
             Pointer = EnterNode;
             EnterNode = -1;
-
             //capture all children node
-            foreach (Node child in Tree[Pointer].Each())
-                child.IsCapture = true;
+            if (Pointer == 0) {
+                foreach (Node child in Tree[Pointer].Each())
+                    child.IsCapture = true;
+            }
         }
     }
 
@@ -150,17 +151,22 @@ public class Terminal {
                 else Result = new Response("已在最上層");
                 break;
             case "down":
-                bool isExist = false;
                 int c = Tree[Pointer].Children.Count;
                 for (int i = 0; i < c; i++) {
                     if(obj == Tree[Pointer].Children[i].Name) {
-                        Pointer = Tree.IndexOf(Tree[Pointer].Children[i]);
-                        isExist = true;
-                        break;
+                        if (Now.Children[i].IsCapture) {
+                            Pointer = Tree.IndexOf(Tree[Pointer].Children[i]);
+                            Result = new Response("現在位置 : " + Tree[Pointer].Name);
+                        }
+                        else {
+                            EnterNode = Tree.IndexOf(Now.Children[i]);
+                            Result = new Response(Now.Children[i].Pwd, Response.type.PWD);
+                        }
+                        return;
+                        
                     }
                 }
-                if (!isExist) Result = new Response(errorObject);
-                else Result = new Response("現在位置 : " + Tree[Pointer].Name);
+                Result = new Response(errorObject);
                 break;
             default:
                 Result = new Response(errorSubInstruction);

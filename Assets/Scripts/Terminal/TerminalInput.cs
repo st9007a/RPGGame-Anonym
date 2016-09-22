@@ -40,7 +40,7 @@ public class TerminalInput : MonoBehaviour {
                 else break;
             }
 
-            foreach (Node child in Machine.t.Now.Each()) {
+            foreach (Node child in Machine.t.Now.EachChild()) {
                 char[] childName = child.Name.ToCharArray();
                 char[] parseSelect = select.ToCharArray();
                 bool isMatch = true;
@@ -50,22 +50,22 @@ public class TerminalInput : MonoBehaviour {
                         isMatch = false;
                         break;
                     }
+
                 }
 
                 if (isMatch) {
                     string[] parseText = inputField.text.Split(' ');
                     parseText[parseText.Length - 1] = child.Name;
                     string newText = parseText[0];
+
                     for (int i = 1; i < parseText.Length; i++) newText += " " + parseText[i];
 
                     inputField.text = newText;
                     inputField.MoveTextEnd(false);
                     break;
                 }
-            }
                 
-
-
+            }
         }
         
     }
@@ -110,12 +110,10 @@ public class TerminalInput : MonoBehaviour {
             case Response.type.TEXT:
                 Machine.PrintResultText(result.Text);
                 RectTransform gTransform = GetComponent<RectTransform>();
-                
+
                 //move input field
-                transform.localPosition = new Vector3(0, 18 - transform.parent.GetComponent<RectTransform>().rect.height, 0);
-                gTransform.offsetMax = new Vector2(0, gTransform.offsetMax.y);
-                gTransform.offsetMin = new Vector2(0, gTransform.offsetMin.y);
-                inputField.text = "";
+                Machine.FixInputFieldPosition();
+
                 break;
             case Response.type.PWD:
                 Machine.PrintPwdInputField(result.Pwd);
