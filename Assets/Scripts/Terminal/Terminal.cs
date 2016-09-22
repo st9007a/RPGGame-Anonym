@@ -35,6 +35,7 @@ public class Terminal {
         InstructionSet.Add("root", root);
         InstructionSet.Add("comment", comment);
         InstructionSet.Add("move", move);
+        InstructionSet.Add("read", read);
     }
 
     public void SetTree(Node rootNode) {
@@ -172,5 +173,11 @@ public class Terminal {
                 Result = new Response(errorSubInstruction);
                 break;
         }
+    }
+
+    private void read(string obj = "", string sub = "") {
+        if (Now.FileName.Contains(obj))
+            Result = new Response(Now.FileName[Now.FileName.IndexOf(obj)]+"\n"+Now.FileContent[Now.FileName.IndexOf(obj)], Response.type.FILE);        
+        else Result = new Response(errorObject);
     }
 }

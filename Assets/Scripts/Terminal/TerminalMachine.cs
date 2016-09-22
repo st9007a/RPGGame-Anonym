@@ -14,13 +14,15 @@ public class TerminalMachine : MonoBehaviour {
 
     void Awake() {
         Node n = new Node("root", true, "asd");
-        n.AddChild(new Node("home", true, "123"));
+        n.AddChild(new Node("home"));
         n.AddChild(new Node("config"));
         n.Children[0].AddChild(new Node("usr1", true, "456"));
 
         t = new Terminal(n, "home");
 
         t.GetNode("home").AddComment("管理使用者");
+        t.GetNode("home").AddFile("test_file", "usr1 pwd=456");
+
         t.GetNode("config").AddComment("管理主機設定");
 
     }

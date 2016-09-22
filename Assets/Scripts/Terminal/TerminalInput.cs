@@ -36,40 +36,23 @@ public class TerminalInput : MonoBehaviour {
             string select = "";
 
             for (int i = text.Length - 1; i >= 0; i--) {
-                if (text[i] != ' ') select += text[i];
+                if (text[i] != ' ') select = text[i] + select;
                 else break;
             }
 
-            foreach (Node child in Machine.t.Now.EachChild()) {
-                char[] childName = child.Name.ToCharArray();
-                char[] parseSelect = select.ToCharArray();
-                bool isMatch = true;
+            string[] parseText = inputField.text.Split(' ');
+            parseText[parseText.Length - 1] = Machine.t.Now.SearchItemName(select);
+            string newText = parseText[0];
 
-                for (int i = parseSelect.Length - 1; i >= 0; i--) {
-                    if (parseSelect.Length > childName.Length || parseSelect[i] != childName[parseSelect.Length - 1 - i]) {
-                        isMatch = false;
-                        break;
-                    }
+            for (int i = 1; i < parseText.Length; i++) newText += " " + parseText[i];
 
-                }
-
-                if (isMatch) {
-                    string[] parseText = inputField.text.Split(' ');
-                    parseText[parseText.Length - 1] = child.Name;
-                    string newText = parseText[0];
-
-                    for (int i = 1; i < parseText.Length; i++) newText += " " + parseText[i];
-
-                    inputField.text = newText;
-                    inputField.MoveTextEnd(false);
-                    break;
-                }
-                
-            }
-        }
-        
+            inputField.text = newText;
+            inputField.MoveTextEnd(false);
+            
+        }       
     }
 
+    
     void endEdit() {
         if(inputField.text != "") { 
 
@@ -118,6 +101,9 @@ public class TerminalInput : MonoBehaviour {
             case Response.type.PWD:
                 Machine.PrintPwdInputField(result.Pwd);
                 gameObject.SetActive(false);
+                break;
+            case Response.type.FILE:
+                Debug.Log(result.File);
                 break;
             default:
                 break;
