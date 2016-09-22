@@ -91,19 +91,21 @@ public class TerminalInput : MonoBehaviour {
         //generate result text
         switch (result.Type) {
             case Response.type.TEXT:
+                //print result
                 Machine.PrintResultText(result.Text);
-                RectTransform gTransform = GetComponent<RectTransform>();
 
                 //move input field
                 Machine.FixInputFieldPosition();
-
                 break;
             case Response.type.PWD:
                 Machine.PrintPwdInputField(result.Pwd);
                 gameObject.SetActive(false);
                 break;
             case Response.type.FILE:
-                Debug.Log(result.File);
+                Machine.PrintFileContent(result.File);
+                //Debug.Log(result.File);
+                //move input field
+                Machine.FixInputFieldPosition();
                 break;
             default:
                 break;

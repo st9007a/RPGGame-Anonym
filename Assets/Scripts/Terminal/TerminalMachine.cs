@@ -8,6 +8,7 @@ public class TerminalMachine : MonoBehaviour {
     public GameObject ScrollViewContainer;
     public GameObject ResultText;
     public GameObject PwdInputField;
+    public GameObject FileText;
     public GameObject TerminalInputField;
 
     public Terminal t;
@@ -79,5 +80,18 @@ public class TerminalMachine : MonoBehaviour {
         PwdInputField.GetComponent<InputField>().Select();
         PwdInputField.GetComponent<InputField>().ActivateInputField();
         
+    }
+
+    public void PrintFileContent(string content) {
+        string[] lines = content.Split('\n');
+        GameObject fileText = Instantiate(FileText);
+        
+        fileText.transform.SetParent(ScrollViewContainer.transform);
+        fileText.GetComponent<TerminalFile>().OpenFile(content);
+        
+        fileText.transform.localPosition = new Vector3(0, 18 - ScrollViewContainer.GetComponent<RectTransform>().rect.height, 0);
+        fileText.GetComponent<RectTransform>().offsetMax = new Vector2(-5, fileText.GetComponent<RectTransform>().offsetMin.y);
+        fileText.GetComponent<RectTransform>().offsetMin = new Vector2(5, fileText.GetComponent<RectTransform>().offsetMin.y);
+        FixContainerSize(21 * lines.Length + 10);
     }
 }

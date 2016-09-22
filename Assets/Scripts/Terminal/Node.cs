@@ -91,7 +91,7 @@ public class Node {
             bool isMatch = true;
 
             for (int j = parseSelect.Length - 1; j >= 0; j--) {
-                if (parseSelect.Length > childName.Length || parseSelect[j] != childName[parseSelect.Length - 1 - j]) {
+                if (parseSelect.Length > childName.Length || parseSelect[j] != childName[j]) {
                     isMatch = false;
                     break;
                 }
