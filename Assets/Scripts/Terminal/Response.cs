@@ -6,18 +6,21 @@ public struct Response {
         TEXT,
         PWD,
         FILE,
+        PROGRESS
     }
 
     public type Type { set; get; }
     public string Text { set; get; }
     public string Pwd { set; get; }
     public string File { set; get; }
+    public string Progress { set; get; }
 
-    public Response(string s, type a = type.TEXT) {
-        Type = a;
-        Text = a == type.TEXT ? s : "";
-        Pwd = a == type.PWD ? s : "";
-        File = a == type.FILE ? s : "";
+    public Response(string resContent, type resType = type.TEXT) {
+        Type = resType;
+        Text = resType == type.TEXT ? resContent : "";
+        Pwd = resType == type.PWD ? resContent : "";
+        File = resType == type.FILE ? resContent : "";
+        Progress = resType == type.PROGRESS ? resContent : "";
     }
 
 }

@@ -36,6 +36,8 @@ public class Terminal {
         InstructionSet.Add("comment", comment);
         InstructionSet.Add("move", move);
         InstructionSet.Add("read", read);
+        InstructionSet.Add("copy", copy);
+        InstructionSet.Add("show", show);
     }
 
     public void SetTree(Node rootNode) {
@@ -106,15 +108,24 @@ public class Terminal {
     }
 
     private void comment(string sub = "", string obj = "") {
+        Result = sub == "" ? new Response(Tree[Pointer].Comment) : new Response(errorSubInstruction);       
+    }
+
+    private void help(string sub = "", string obj = "") {
         switch (sub) {
             case "":
-                Result = new Response(Tree[Pointer].Comment);
+                break;
+            case "root":
+                break;
+            case "comment":
+                break;
+            case "move":
+                break;
+            case "read":
                 break;
             default:
-                Result = new Response(errorSubInstruction);
                 break;
         }
-        
     }
 
     private void root(string sub = "", string obj = "") {
@@ -175,9 +186,38 @@ public class Terminal {
         }
     }
 
+    //because param : sub is ""
     private void read(string obj = "", string sub = "") {
         if (Now.FileName.Contains(obj))
             Result = new Response(Now.FileName[Now.FileName.IndexOf(obj)]+"\n"+Now.FileContent[Now.FileName.IndexOf(obj)], Response.type.FILE);        
         else Result = new Response(errorObject);
+    }
+
+    private void copy(string obj = "", string sub = "") {
+        Result = Now.FileName.Contains(obj) ? new Response(obj, Response.type.PROGRESS) : new Response(errorObject);
+    }
+
+    private void show(string sub = "", string obj = "") {
+        if (sub == "") {
+            string output = "";
+
+            if (Now.FileName.Count == 0 && Now.Children.Count == 0) {
+                output = "<color=#ff2d2d>沒有東西</color>";
+                Result = new Response(output);
+                return;
+            }
+
+            int c = Now.Children.Count;
+            for (int i = 0; i < c; i++)
+                output += "<color=#9393ff>" + Now.Children[i].Name + "</color>  ";
+
+            c = Now.FileName.Count;
+            for (int i = 0; i < c; i++)
+                output += Now.FileName[i] + "  ";
+
+            Result = new Response(output);
+            
+        }
+        else Result = new Response(errorSubInstruction);
     }
 }

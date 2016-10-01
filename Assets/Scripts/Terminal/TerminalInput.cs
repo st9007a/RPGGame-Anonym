@@ -103,9 +103,13 @@ public class TerminalInput : MonoBehaviour {
                 break;
             case Response.type.FILE:
                 Machine.PrintFileContent(result.File);
-                //Debug.Log(result.File);
+
                 //move input field
                 Machine.FixInputFieldPosition();
+                break;
+            case Response.type.PROGRESS:
+                Machine.PrintProgress("複製 " + result.Progress);
+                gameObject.SetActive(false);
                 break;
             default:
                 break;

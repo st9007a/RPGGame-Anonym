@@ -10,6 +10,7 @@ public class TerminalMachine : MonoBehaviour {
     public GameObject PwdInputField;
     public GameObject FileText;
     public GameObject TerminalInputField;
+    public GameObject ProgressText;
 
     public Terminal t;
 
@@ -83,15 +84,47 @@ public class TerminalMachine : MonoBehaviour {
     }
 
     public void PrintFileContent(string content) {
-        string[] lines = content.Split('\n');
         GameObject fileText = Instantiate(FileText);
         
         fileText.transform.SetParent(ScrollViewContainer.transform);
-        fileText.GetComponent<TerminalFile>().OpenFile(content);
-        
-        fileText.transform.localPosition = new Vector3(0, 18 - ScrollViewContainer.GetComponent<RectTransform>().rect.height, 0);
-        fileText.GetComponent<RectTransform>().offsetMax = new Vector2(-5, fileText.GetComponent<RectTransform>().offsetMin.y);
+        string[] lines = fileText.GetComponent<TerminalFile>().OpenFile(content).Split('\n');
+
+        // 36 -> resultText "uno : read ..." 
+        // 20 -> set 20 pixel per line 
+        // 5 -> distance between next game object and this 
+        fileText.transform.localPosition = new Vector3(0, 36 - ScrollViewContainer.GetComponent<RectTransform>().rect.height - lines.Length * 20 / 2 - 5, 0);
+
+        //set right and left distance
+        fileText.GetComponent<RectTransform>().offsetMax = new Vector2(-5, fileText.GetComponent<RectTransform>().offsetMax.y);
         fileText.GetComponent<RectTransform>().offsetMin = new Vector2(5, fileText.GetComponent<RectTransform>().offsetMin.y);
-        FixContainerSize(21 * lines.Length + 10);
+
+        //fix container
+        FixContainerSize(20 * lines.Length + 10);
+    }
+
+    public void PrintProgress(string executeAction) {
+        GameObject progress = Instantiate(ProgressText);
+        progress.GetComponent<TerminalProgress>().ExecuteAction = executeAction;
+        progress.GetComponent<TerminalProgress>().Duration = 10;
+
+        RectTransform textTransform = progress.GetComponent<RectTransform>();
+
+        progress.transform.SetParent(ScrollViewContainer.transform);
+
+        // 36 -> resultText "uno : read ..." 
+        // 30 -> set 20 pixel per line 
+        // 5 -> distance between next game object and this 
+        progress.transform.localPosition = new Vector3(0, 36 - ScrollViewContainer.GetComponent<RectTransform>().rect.height - 2 * 20 / 2 - 5, 0);
+
+        textTransform.offsetMax = new Vector2(5, textTransform.offsetMax.y);
+        textTransform.offsetMin = new Vector2(5, textTransform.offsetMin.y);
+
+        //fix container
+        FixContainerSize(20 * 2 + 10);
+    }
+
+    public void ProgressComplete() {
+        TerminalInputField.SetActive(true);
+        FixInputFieldPosition();
     }
 }
